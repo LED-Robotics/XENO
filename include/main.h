@@ -35,7 +35,13 @@
 #define PROS_USE_LITERALS
 
 #include "api.h"
-
+#include "subsystems/subsystems.h"
+#include "command/commandScheduler.h"
+#include "feedback/feedback.h"
+#include "config.h"
+#include "motionProfiling/combinedMotionProfile.h"
+#include "motionProfiling/bezierMotionProfiling.h"
+#include "autonomous/autonCommands.h"
 /**
  * You should add more #includes here
  */
