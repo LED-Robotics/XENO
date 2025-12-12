@@ -1,30 +1,44 @@
-#include "main.h"
-#include "robot_map.h"
-#include "constants.h"
 
-// Motor frontLeft{DrivePorts::kFrontLeft, MotorGears::blue, MotorUnits::deg};
-// Motor frontRight{DrivePorts::kFrontRight, MotorGears::blue, MotorUnits::deg};
-// Motor backLeft{DrivePorts::kBackLeft, MotorGears::blue, MotorUnits::deg};
-// Motor backRight{DrivePorts::kBackRight, MotorGears::blue, MotorUnits::deg};
+#include "robot_map.h"
 
 using namespace AngularPID;
 using namespace LateralPID;
 
-// MotorGroup leftMotors({frontLeft, backLeft});
-// MotorGroup rightMotors({frontRight, backRight});
-MotorGroup leftMotors({DrivePorts::kFrontLeft, DrivePorts::kBackLeft, DrivePorts::kMiddleLeft}, MotorGears::blue, MotorUnits::deg);
-MotorGroup rightMotors({DrivePorts::kFrontRight, DrivePorts::kBackRight, DrivePorts::kMiddleRight}, MotorGears::blue, MotorUnits::deg);
+// Motors
 
-pros::ADILed led('H', 100);
+MotorGroup leftMotors({-DrivePorts::kFrontLeft, -DrivePorts::kBackLeft, DrivePorts::kMiddleLeft}, MotorGears::blue, MotorUnits::deg);
+MotorGroup rightMotors({DrivePorts::kFrontRight, DrivePorts::kBackRight, -DrivePorts::kMiddleRight}, MotorGears::blue, MotorUnits::deg);
+
+pros::Motor preRollers(-2, MotorGears::rpm_200, MotorUnits::deg);
+pros::Motor l2Motor(-1, MotorGears::rpm_200, MotorUnits::deg);
 
 pros::Controller master(CONTROLLER_MASTER);
 
-Imu imuTop{8};
-Imu imuBottom{9};
+// Pistons
 
-pros::Rotation vertical_Tracking(1);
-pros::Rotation horizontal_Tracking(2);
-// create a v5 rotation sensor on port 1
+pros::ADIDigitalOut hood_Piston('C');
+pros::ADIDigitalOut dp_Piston('B');
+pros::ADIDigitalOut lw_Piston('A');
+
+pros::ADILed led('H', 100);
+
+// Sensors
+
+pros::Distance backRightDistance(8);
+pros::Distance frontRightDistance(9);
+pros::Distance backLeftDistance(4);
+pros::Distance frontLeftDistance(3);
+pros::Distance backDistance(10);
+
+pros::Optical colorSort(19);
+
+Imu imuTop{17};
+
+pros::Rotation vertical_Tracking(14);
+pros::Rotation horizontal_Tracking(7);
+
+lemlib::TrackingWheel horizontal_tracking_wheel(&horizontal_Tracking, lemlib::Omniwheel::NEW_2, -5.75);
+lemlib::TrackingWheel vertical_tracking_wheel(&vertical_Tracking, lemlib::Omniwheel::NEW_2, -5.75);
 
 lemlib::Drivetrain drivetrain{
     //>OWO<
@@ -37,9 +51,9 @@ lemlib::Drivetrain drivetrain{
 };
 
 lemlib::OdomSensors odomInfo{
-    vertical_Tracking, // set both to nullptr because we dont have vertical tracking wheels
+    nullptr, // set both to nullptr because we dont have vertical tracking wheels
     nullptr,
-    horizontal_Tracking, // horizontal tracking wheel 1
+    nullptr, // horizontal tracking wheel 1
     nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
     &imuTop, // inertial sensor
 
@@ -47,15 +61,15 @@ lemlib::OdomSensors odomInfo{
 
 // lateral PID controller
 lemlib::ControllerSettings lateral_controller(
-    lateralkP,                     // proportional gain (kP)
-    lateralkI,                     // integral gain (kI)
-    lateralkD,                     // derivative gain (kD)
-    lateralAntiWindup,             // anti windup
-    lateralSmallErrorRange,        // small error range, in inches
-    lateralSmallErrorRangeTimeout, // small error range timeout, in milliseconds
-    lateralLargeErrorRange,        // large error range, in inches
-    lateralLargeErrorRangeTimeout, // large error range timeout, in milliseconds
-    lateralSlew                    // maximum acceleration (slew)
+    LateralPID::lateralkP,                     // proportional gain (kP)
+    LateralPID::lateralkI,                     // integral gain (kI)
+    LateralPID::lateralkD,                     // derivative gain (kD)
+    LateralPID::lateralAntiWindup,             // anti windup
+    LateralPID::lateralSmallErrorRange,        // small error range, in inches
+    LateralPID::lateralSmallErrorRangeTimeout, // small error range timeout, in milliseconds
+    LateralPID::lateralLargeErrorRange,        // large error range, in inches
+    LateralPID::lateralLargeErrorRangeTimeout, // large error range timeout, in milliseconds
+    LateralPID::lateralSlew                    // maximum acceleration (slew)
 );
 
 // angular PID controller
