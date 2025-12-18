@@ -8,9 +8,10 @@
 #include "velocityProfile/trapezoidalVelocityProfile.hpp"
 
 /**
-* 1D Motion Profiled movements for moving straight lines and simple arcs
-*/
-class TankMotionProfiling : public Command {
+ * 1D Motion Profiled movements for moving straight lines and simple arcs
+ */
+class TankMotionProfiling : public Command
+{
 private:
     DrivetrainSubsystem *drivetrain;
     TrapezoidalVelocityProfile velocityProfile;
@@ -27,9 +28,9 @@ private:
     bool useTurnPID = true;
 
     PID distancePid = CONFIG::DISTANCE_PID;
-    PID anglePid = CONFIG::TURN_PID_NO_GOAL;
+    PID anglePid = CONFIG::TURN_PID;
 
-    std::optional<std::function<Angle(QTime)> > angleFunction;
+    std::optional<std::function<Angle(QTime)>> angleFunction;
 
 public:
     TankMotionProfiling(DrivetrainSubsystem *drivetrain, const ProfileConstraints &profile_constraints,
@@ -37,38 +38,41 @@ public:
                         const bool flip, const Angle &target_angle, const QCurvature &curvature = 0.0,
                         const bool useTurnPID = true, const QVelocity initialVelocity = 0.0,
                         const QVelocity endVelocity = 0.0,
-                        std::optional<std::function<Angle(QTime)> > angleFunction =
-                                std::nullopt) : drivetrain(drivetrain),
-                                                velocityProfile(distance, profile_constraints, initialVelocity,
-                                                                endVelocity),
-                                                targetAngle((flip ? -1.0f : 1.0f) * target_angle),
-                                                curvature((flip ? -1.0f : 1.0f) * curvature.getValue()),
-                                                angleFunction(std::move(angleFunction)) {
+                        std::optional<std::function<Angle(QTime)>> angleFunction =
+                            std::nullopt) : drivetrain(drivetrain),
+                                            velocityProfile(distance, profile_constraints, initialVelocity,
+                                                            endVelocity),
+                                            targetAngle((flip ? -1.0f : 1.0f) * target_angle),
+                                            curvature((flip ? -1.0f : 1.0f) * curvature.getValue()),
+                                            angleFunction(std::move(angleFunction))
+    {
         this->useTurnPID = useTurnPID;
         anglePid.setTurnPid(true);
     }
 
-    [[nodiscard]] double getSpeedMultiplier() const {
+    [[nodiscard]] double getSpeedMultiplier() const
+    {
         if (curvature.getValue() == 0.0)
             return 1.0;
 
         return 1.0 / (1.0 + abs(curvature.getValue() * 0.5) * CONFIG::TRACK_WIDTH.getValue());
     }
 
-    void initialize() override {
+    void initialize() override
+    {
         startTime = pros::millis() * 1_ms;
 
         startDistance = drivetrain->getDistance();
 
         QVelocity adjustedSpeed =
-                this->getSpeedMultiplier() * this->velocityProfile.getProfileConstraints().maxVelocity.getValue();
+            this->getSpeedMultiplier() * this->velocityProfile.getProfileConstraints().maxVelocity.getValue();
 
         this->velocityProfile.setProfileConstraints(
             {adjustedSpeed, velocityProfile.getProfileConstraints().maxAcceleration});
 
         this->velocityProfile.calculate();
 
-        anglePid = drivetrain->robotHasGoal() ? CONFIG::TURN_PID_GOAL : CONFIG::TURN_PID_NO_GOAL;
+        CONFIG::TURN_PID;
 
         anglePid.setTarget(targetAngle.getValue());
         anglePid.setTurnPid(true);
@@ -76,7 +80,8 @@ public:
         anglePid.reset();
     }
 
-    void execute() override {
+    void execute() override
+    {
         const QTime duration = (pros::millis() * 1_ms) - startTime;
 
         const QAcceleration acceleration = velocityProfile.getAccelerationByTime(duration);
@@ -88,7 +93,7 @@ public:
         distancePid.setTarget(targetDistance.getValue());
 
         const auto [linearFF, angularFF] = CONFIG::DRIVETRAIN_FEEDFORWARD(speed, acceleration, speed * curvature,
-                                                               acceleration * curvature);
+                                                                          acceleration * curvature);
 
         const double wheelVoltage = distancePid.update(currentDistance.getValue()) + linearFF;
 
@@ -100,12 +105,14 @@ public:
         double rightVoltage = rightCurvatureAdjustment * wheelVoltage;
 
         // integrate turnPid
-        if (useTurnPID) {
+        if (useTurnPID)
+        {
             const Angle offset = targetDistance * curvature;
 
             Angle targetAngleWithOffset = targetAngle + offset;
 
-            if (angleFunction.has_value()) {
+            if (angleFunction.has_value())
+            {
                 targetAngleWithOffset += angleFunction.value()(duration);
             }
 
@@ -121,7 +128,8 @@ public:
         drivetrain->setPct(leftVoltage, rightVoltage);
     }
 
-    void end(bool interrupted) override {
+    void end(bool interrupted) override
+    {
     }
 
     std::vector<Subsystem *> getRequirements() override { return {drivetrain}; }

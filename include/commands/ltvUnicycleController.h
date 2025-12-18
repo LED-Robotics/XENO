@@ -10,9 +10,10 @@
 /**
  * Class to follow motion profiled paths
  */
-class LTVUnicycleController : public Command {
+class LTVUnicycleController : public Command
+{
 private:
-    Drivetrain *drivetrain;
+    DrivetrainSubsystem *drivetrain;
 
     Eigen::Matrix3f Q;
     Eigen::Matrix2f R;
@@ -24,17 +25,19 @@ private:
     DriveSpeeds lastSpeeds;
 
 public:
-    LTVUnicycleController(Drivetrain *drivetrain, MotionProfile *motion_profile,
+    LTVUnicycleController(DrivetrainSubsystem *drivetrain, MotionProfile *motion_profile,
                           Eigen::Matrix3f Q = CONFIG::DEFAULT_DT_COST_Q,
-                          Eigen::Matrix2f R = CONFIG::DEFAULT_DT_COST_R) :
-        drivetrain(drivetrain), Q(Q), R(R), motionProfile(motion_profile) {
+                          Eigen::Matrix2f R = CONFIG::DEFAULT_DT_COST_R) : drivetrain(drivetrain), Q(Q), R(R), motionProfile(motion_profile)
+    {
         startTime = 0.0;
     }
 
     void initialize() override { startTime = pros::millis() * millisecond; }
 
-    void execute() override {
-        if (const auto command = motionProfile->get(pros::millis() * millisecond - startTime); command.has_value()) {
+    void execute() override
+    {
+        if (const auto command = motionProfile->get(pros::millis() * millisecond - startTime); command.has_value())
+        {
             const Eigen::Vector3f currentPose = drivetrain->getPose();
             const Eigen::Vector3f desiredPose = command->desiredPose.cast<float>();
 
@@ -45,14 +48,14 @@ public:
             const Eigen::Vector3f error(errorXY.x(), errorXY.y(), errorAngle.Convert(radian));
 
             const Eigen::Matrix3f A{
-                    {0.0, 0.0, 0.0}, {0.0, 0.0, command.value().desiredVelocity.value}, {0.0, 0.0, 0.0}};
+                {0.0, 0.0, 0.0}, {0.0, 0.0, command.value().desiredVelocity.value}, {0.0, 0.0, 0.0}};
             const Eigen::Matrix<float, 3, 2> B{{1.0, 0.0}, {0.0, 0.0}, {0.0, 1.0}};
 
             const auto discAB = discretizeAB(A, B, 10_ms);
 
             const Eigen::MatrixXf X = dareSolver(discAB.first, discAB.second, Q, R);
             const Eigen::MatrixXf K = (R + discAB.second.transpose() * X * discAB.second).inverse() *
-                                discAB.second.transpose() * X * discAB.first;
+                                      discAB.second.transpose() * X * discAB.first;
 
             const Eigen::Vector2f u = K * error;
 
