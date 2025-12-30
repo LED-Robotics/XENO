@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "command/subsystem.h"
+#include "command/instantCommand.h"
 
 class SolenoidSubsystem : public Subsystem {
     std::vector<pros::adi::DigitalOut> solenoids;
@@ -29,6 +30,10 @@ public:
 
     RunCommand *levelCommand(bool value) {
         return new RunCommand([this, value]() { this->setLevel(value); }, {this});
+    }
+
+    InstantCommand *toggleCommand() {
+        return new InstantCommand([this]() { this->setLevel(!this->getLastValue()); }, {this});
     }
 
     [[nodiscard]] bool getLastValue() const { return lastValue; }

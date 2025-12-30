@@ -8,15 +8,12 @@
 
 class MotorSubsystem : public Subsystem
 {
-    pros::Motor intakeMotorLeft;
-    pros::Motor intakeMotorRight;
+    pros::Motor intakeMotor;
 
 public:
-    explicit MotorSubsystem(pros::Motor intake_motor_left, pros::Motor intake_motor_right) : intakeMotorLeft(std::move(intake_motor_left)),
-                                                                                             intakeMotorRight(std::move(intake_motor_right))
+    explicit MotorSubsystem(pros::Motor intake_motor) : intakeMotor(std::move(intake_motor))
     {
-        intakeMotorLeft.set_encoder_units_all(pros::MotorEncoderUnits::rotations);
-        intakeMotorRight.set_encoder_units_all(pros::MotorEncoderUnits::rotations);
+        intakeMotor.set_encoder_units_all(pros::MotorEncoderUnits::rotations);
     }
 
     void periodic() override
@@ -26,14 +23,12 @@ public:
 
     void setPct(const double pct)
     {
-        this->intakeMotorLeft.move_voltage(pct * 12000.0);
-        this->intakeMotorRight.move_voltage(pct * 12000.0);
+        this->intakeMotor.move_voltage(pct * 12000.0);
     }
 
     void setSpeed(double speed)
     {
-        this->intakeMotorLeft.move_velocity(speed);
-        this->intakeMotorRight.move_velocity(speed);
+        this->intakeMotor.move_velocity(speed);
     }
 
     RunCommand *stopIntake()
@@ -50,8 +45,7 @@ public:
 
     double getTopMotorTemp() const
     {
-        return this->intakeMotorLeft.get_temperature();
-        return this->intakeMotorRight.get_temperature();
+        return this->intakeMotor.get_temperature();
     }
 
     ~MotorSubsystem() override = default;

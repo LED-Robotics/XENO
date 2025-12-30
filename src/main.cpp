@@ -1,9 +1,19 @@
+
+#include "subsystems/drivetrain.h"
+#include "command/command.h"
+#include "Eigen/Dense"
 #include "main.h"
 
-Command* autonCommand;
+using namespace pros;
 
-[[noreturn]] void update_loop() {
-    while (true) {
+// ...existing code...
+
+Command *autonCommand;
+
+[[noreturn]] void update_loop()
+{
+    while (true)
+    {
         auto start_time = pros::millis();
 
         CommandScheduler::run();
@@ -12,10 +22,11 @@ Command* autonCommand;
     }
 }
 
+[[noreturn]] void screen_update_loop()
+{
 
-[[noreturn]] void screen_update_loop() {
-
-    while (true) {
+    while (true)
+    {
         auto start_time = pros::millis();
 
         // switch (ALLIANCE) {
@@ -37,7 +48,8 @@ Command* autonCommand;
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
+void initialize()
+{
     pros::lcd::initialize();
     pros::lcd::set_text(1, "Hello PROS User!");
 
@@ -78,7 +90,8 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {
+void autonomous()
+{
     CommandScheduler::schedule(autonCommand);
 }
 
@@ -95,9 +108,10 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() {
+void opcontrol()
+{
     autonCommand->cancel();
-    if (AUTON == Auton::SKILLS) {
-        CommandScheduler::schedule(autonCommand->until([&]() {return partner.get_digital(DIGITAL_RIGHT);}));
+    if (AUTON == Auton::SKILLS)
+    {
     }
 }

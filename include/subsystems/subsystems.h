@@ -25,7 +25,8 @@
 #include <queue>
 
 inline DrivetrainSubsystem *drivetrainSubsystem;
-inline MotorSubsystem *IntakeSubsystem;
+inline MotorSubsystem *conveyerSubsystem;
+inline MotorSubsystem *hoodSubsystem;
 inline SolenoidSubsystem *descoreSubsystem;
 inline SolenoidSubsystem *doubleParkSubsystem;
 inline SolenoidSubsystem *storingSubsystem;
@@ -50,7 +51,8 @@ inline void initializeController()
         ->andOther(primary.getTrigger(DIGITAL_R2)->negate())
         ->andOther(primary.getTrigger(DIGITAL_L1)->negate())
         ->andOther(primary.getTrigger(DIGITAL_L2)->negate())
-        ->toggleOnTrue(IntakeSubsystem->pctCommand(-1.0));
+        ->toggleOnTrue(conveyerSubsystem->pctCommand(-1.0))
+        ->toggleOnTrue(hoodSubsystem->pctCommand(-1.0));
 
     // Score L2
 
@@ -58,27 +60,26 @@ inline void initializeController()
         ->andOther(primary.getTrigger(DIGITAL_L2)->negate())
         ->andOther(primary.getTrigger(DIGITAL_R1)->negate())
         ->andOther(primary.getTrigger(DIGITAL_R2)->negate())
-        ->onTrue(l2Subsystem->levelCommand(false))
-        ->toggleOnTrue(IntakeSubsystem->pctCommand(1.0))
+        ->toggleOnTrue(conveyerSubsystem->pctCommand(0.8))
+        ->toggleOnTrue(hoodSubsystem->pctCommand(0.0))
         ->toggleOnTrue(l2Subsystem->levelCommand(false));
 
-    // Score L3
+    // Score L2: toggle L2 solenoid when L1 pressed
 
-    primary.getTrigger(DIGITAL_L2)
-        ->andOther(primary.getTrigger(DIGITAL_L1)->negate())
+    primary.getTrigger(DIGITAL_L1)
+        ->andOther(primary.getTrigger(DIGITAL_L2)->negate())
         ->andOther(primary.getTrigger(DIGITAL_R1)->negate())
         ->andOther(primary.getTrigger(DIGITAL_R2)->negate())
-        ->toggleOnTrue(IntakeSubsystem->pctCommand(1.0))
-        ->toggleOnTrue(storingSubsystem->levelCommand(true));
-
-    // Intake
+        ->onTrue(l2Subsystem->toggleCommand())
+        ->toggleOnTrue(conveyerSubsystem->pctCommand(0.8))
+        ->toggleOnTrue(hoodSubsystem->pctCommand(0.0));
 
     primary.getTrigger(DIGITAL_R2)
         ->andOther(primary.getTrigger(DIGITAL_R1)->negate())
         ->andOther(primary.getTrigger(DIGITAL_L1)->negate())
         ->andOther(primary.getTrigger(DIGITAL_L2)->negate())
-        ->toggleOnTrue(IntakeSubsystem->pctCommand(1.0))
-        ->toggleOnTrue(storingSubsystem->levelCommand(false));
+        ->toggleOnTrue(conveyerSubsystem->pctCommand(1.0))
+        ->toggleOnTrue(hoodSubsystem->pctCommand(-1.0));
 
     // Pid Tuning
 
@@ -91,20 +92,15 @@ inline void initializeController()
     // Match Loader Control
 
     primary.getTrigger(DIGITAL_DOWN)
-        ->onTrue(matchLoaderSubsystem->levelCommand(true))
-        ->onFalse(matchLoaderSubsystem->levelCommand(false));
+        ->toggleOnTrue(matchLoaderSubsystem->levelCommand(true));
 
     // Descore Control
 
     primary.getTrigger(DIGITAL_A)
-        ->onTrue(descoreSubsystem->levelCommand(true))
-        ->onFalse(descoreSubsystem->levelCommand(false));
+        ->onTrue(descoreSubsystem->levelCommand(false))
+        ->onFalse(descoreSubsystem->levelCommand(true));
 
     // Double Park
-
-    primary.getTrigger(DIGITAL_DOWN)
-        ->toggleOnTrue(doubleParkSubsystem->levelCommand(true))
-        ->toggleOnFalse(doubleParkSubsystem->levelCommand(false));
 };
 
 inline void initializePathCommands()
@@ -140,15 +136,16 @@ inline void subsystemInit()
     // 17 is front drive motor left
     // 18 middle drive motor left
 
-    IntakeSubsystem = new MotorSubsystem(pros::Motor(6), pros::Motor(-7));
+    conveyerSubsystem = new MotorSubsystem(pros::Motor(-6));
+    hoodSubsystem = new MotorSubsystem(pros::Motor(7));
     descoreSubsystem = new SolenoidSubsystem(pros::adi::DigitalOut('e'));
     doubleParkSubsystem = new SolenoidSubsystem(pros::adi::DigitalOut('a'));
     storingSubsystem = new SolenoidSubsystem(pros::adi::DigitalOut('c'));
     l2Subsystem = new SolenoidSubsystem(pros::adi::DigitalOut('b'));
     matchLoaderSubsystem = new SolenoidSubsystem(pros::adi::DigitalOut('d'));
     drivetrainSubsystem = new DrivetrainSubsystem(
-        {8, -9, -10},
-        {-1, 2, 3},
+        {-8, 9, 10},
+        {1, -2, -3},
         pros::Imu(4),
         pros::Rotation(5)); // wheels listed back to front; 8 for rotation sensor on pto
 
@@ -166,7 +163,7 @@ inline void subsystemInit()
 
         // Check motor temps
         if (std::max({drivetrainSubsystem->getTopMotorTemp(),
-                      IntakeSubsystem->getTopMotorTemp()}) >= 45.0) {
+                      conveyerSubsystem->getTopMotorTemp()}) >= 45.0) {
             primary.rumble(".--");
         } });
 
@@ -178,7 +175,8 @@ inline void subsystemInit()
     drivetrainSubsystem->initUniform(-70_in, -70_in, 70_in, 70_in, 0_deg, false);
 
     CommandScheduler::registerSubsystem(drivetrainSubsystem, drivetrainSubsystem->arcade(primary));
-    CommandScheduler::registerSubsystem(IntakeSubsystem, IntakeSubsystem->stopIntake());
+    CommandScheduler::registerSubsystem(conveyerSubsystem, conveyerSubsystem->stopIntake());
+    CommandScheduler::registerSubsystem(hoodSubsystem, hoodSubsystem->stopIntake());
     CommandScheduler::registerSubsystem(descoreSubsystem, descoreSubsystem->levelCommand(false));
     CommandScheduler::registerSubsystem(doubleParkSubsystem, doubleParkSubsystem->levelCommand(false));
     CommandScheduler::registerSubsystem(matchLoaderSubsystem, matchLoaderSubsystem->levelCommand(false));
