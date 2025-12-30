@@ -16,6 +16,8 @@
 
 #include "sysid/oneDofVelocitySystem.h"
 
+extern Alliance ALLIANCE;
+
 struct DriveSpeeds
 {
     QVelocity linearVelocity = 0.0;
@@ -299,9 +301,8 @@ public:
         return new RunCommand(
             [this, controller]() mutable
             {
-                // Inverted turning: reverse sign of the right stick X when applied
-                this->setPct((controller.get_analog(ANALOG_LEFT_Y) - controller.get_analog(ANALOG_RIGHT_X)) / 127.0,
-                             (controller.get_analog(ANALOG_LEFT_Y) + controller.get_analog(ANALOG_RIGHT_X)) /
+                this->setPct((controller.get_analog(ANALOG_LEFT_Y) + controller.get_analog(ANALOG_RIGHT_X)) / 127.0,
+                             (controller.get_analog(ANALOG_LEFT_Y) - controller.get_analog(ANALOG_RIGHT_X)) /
                                  127.0);
             },
             {this});
@@ -320,9 +321,8 @@ public:
             },
             [this, controller]() mutable
             {
-                // Inverted turning for recorded arcade as well
-                this->setPct((controller.get_analog(ANALOG_LEFT_Y) - controller.get_analog(ANALOG_RIGHT_X)) / 127.0,
-                             (controller.get_analog(ANALOG_LEFT_Y) + controller.get_analog(ANALOG_RIGHT_X)) /
+                this->setPct((controller.get_analog(ANALOG_LEFT_Y) + controller.get_analog(ANALOG_RIGHT_X)) / 127.0,
+                             (controller.get_analog(ANALOG_LEFT_Y) - controller.get_analog(ANALOG_RIGHT_X)) /
                                  127.0);
             },
             [this](bool _) mutable

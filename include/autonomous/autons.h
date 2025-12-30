@@ -5,8 +5,8 @@
  */
 enum Auton_
 {
-  left,
-  right,
+  left_Auton,
+  right_Auton,
   SKILLS,
   NONE
 } typedef Auton;

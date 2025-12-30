@@ -5,8 +5,6 @@
 #include "command/includes.h"
 #include "Left.h"
 
-extern int AUTON;
-
 /**
  * Allows easy selection of autonomous routines given a AUTON object, called on initialization to build states
  */
@@ -17,7 +15,7 @@ public:
     {
         switch (AUTON)
         {
-        case left:
+        case left_Auton:
             return Left::left();
         default:
             return new InstantCommand([]()

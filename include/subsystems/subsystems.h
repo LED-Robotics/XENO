@@ -61,18 +61,16 @@ inline void initializeController()
         ->andOther(primary.getTrigger(DIGITAL_R1)->negate())
         ->andOther(primary.getTrigger(DIGITAL_R2)->negate())
         ->toggleOnTrue(conveyerSubsystem->pctCommand(0.8))
-        ->toggleOnTrue(hoodSubsystem->pctCommand(0.0))
-        ->toggleOnTrue(l2Subsystem->levelCommand(false));
+        ->toggleOnTrue(l2Subsystem->levelCommand(true));
 
     // Score L2: toggle L2 solenoid when L1 pressed
 
-    primary.getTrigger(DIGITAL_L1)
-        ->andOther(primary.getTrigger(DIGITAL_L2)->negate())
+    primary.getTrigger(DIGITAL_L2)
+        ->andOther(primary.getTrigger(DIGITAL_L1)->negate())
         ->andOther(primary.getTrigger(DIGITAL_R1)->negate())
         ->andOther(primary.getTrigger(DIGITAL_R2)->negate())
-        ->onTrue(l2Subsystem->toggleCommand())
-        ->toggleOnTrue(conveyerSubsystem->pctCommand(0.8))
-        ->toggleOnTrue(hoodSubsystem->pctCommand(0.0));
+        ->toggleOnTrue(conveyerSubsystem->pctCommand(1.0))
+        ->toggleOnTrue(hoodSubsystem->pctCommand(1.0));
 
     primary.getTrigger(DIGITAL_R2)
         ->andOther(primary.getTrigger(DIGITAL_R1)->negate())
