@@ -5,11 +5,15 @@
 #include "constants.h"
 #include "autonomous_funcs.h"
 
-void rightHalf();
+void rightHalfRed();
 
-void soloAWP();
+void leftHalfBlue();
+
+void soloAWPRed();
 
 void soloAWPBlue();
+
+void skills();
 
 void executeAutonomous();
 

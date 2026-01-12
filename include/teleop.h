@@ -11,12 +11,4 @@ void littleWill();
 
 void intake();
 
-void hood();
-
-void storageSystem();
-
-void intakeScore();
-
-void colorSorting();
-
-void doublePark();
+void bunnyEar();

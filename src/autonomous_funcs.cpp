@@ -1,37 +1,34 @@
 #include "autonomous_funcs.h"
 #include <cmath>
 
-double difference = 6.25; // inches
-double difference2 = 6.5; // inches
-double odomResetRight()
+double frontOffset = 0.0;
+double leftOffset = 0.0;
+double rightOffset = 0.0;
+double backOffset = 0.0;
+double odomResetFront()
 {
-    double back = ((backRightDistance.get() + 31) / 25.4);
-    double front = ((frontRightDistance.get()) / 25.4);
-
-    double deltaDistance = (back - front) / (difference);
-    double heading = 90 + (atan(deltaDistance) * (180 / M_PI));
-    return heading;
+    double frontDis = frontDistance.get_distance() / 25.4; // convert to inches
+    double adjustedFront = frontDis + frontOffset;
+    return adjustedFront;
 }
 double odomResetLeft()
 {
-    double back = ((backLeftDistance.get()) / 25.4);
-    double front = ((frontLeftDistance.get() + 19) / 25.4);
-
-    double deltaDistance = (back - front) / (difference2);
-    double heading = 90 + (atan(deltaDistance) * (180 / M_PI));
-    return heading;
+    double leftDis = leftDistance.get_distance() / 25.4; // convert to inches
+    double adjustedLeft = leftDis + leftOffset;
+    return adjustedLeft;
+}
+double odomResetRight()
+{
+    double rightDis = rightDistance.get_distance() / 25.4; // convert to inches
+    double adjustedRight = rightDis + rightOffset;
+    return adjustedRight;
+}
+double odomResetBack()
+{
+    double backDis = backDistance.get_distance() / 25.4; // convert to inches
+    double adjustedBack = backDis + backOffset;
+    return adjustedBack;
 }
 double colorSorting(bool allianceId)
 {
-    bool alliance = allianceId;
-    bool cubeColor = true;
-    if (colorSort.get_hue() >= 240)
-    {
-        bool cubeColor = true; // true = blue idk how to give it blue and red instead of true and false
-    }
-    if (cubeColor != alliance)
-    {
-        l2Motor.move_relative(500, 127);
-        l2Motor.move(-127);
-    }
 }

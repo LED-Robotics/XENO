@@ -80,7 +80,7 @@ void competition_initialize() {}
 
 void autonomous()
 {
-    soloAWP();
+    rightHalfRed();
 }
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -103,10 +103,7 @@ void opcontrol()
         teleopDrive();
         littleWill();
         intake();
-        hood();
-        storageSystem();
-        intakeScore();
-        doublePark();
+        bunnyEar();
         double heading = odomResetRight();
         master.print(1, 0, "Angle: %f", heading);
 

@@ -19,7 +19,6 @@ extern Motor preRollers;
 
 extern Motor storageMotor;
 extern Motor l2Motor;
-extern Motor l3Motor;
 
 extern MotorGroup leftMotors;
 extern MotorGroup rightMotors;
@@ -32,10 +31,10 @@ extern pros::ADILed led;
 
 extern Controller master;
 
-extern Distance backRightDistance;
-extern Distance frontRightDistance;
-extern Distance backLeftDistance;
-extern Distance frontLeftDistance;
+extern Distance rightDistance;
+extern Distance frontDistance;
+extern Distance leftDistance;
+extern Distance backDistance;
 
 extern Optical colorSort;
 
@@ -48,9 +47,9 @@ extern Rotation horizontal_Tracking;
 
 // Pistons
 
-extern pros::ADIDigitalOut hood_Piston;
-extern pros::ADIDigitalOut dp_Piston;
+extern pros::ADIDigitalOut bunny_Ear_Piston;
 extern pros::ADIDigitalOut lw_Piston;
+extern pros::ADIDigitalOut l2_Piston;
 
 // Lemlib
 

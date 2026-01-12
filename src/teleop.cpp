@@ -33,7 +33,24 @@ bool intakeOn = false;
 
 void intake()
 {
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
+    {
+        if (intakeOn == false)
+        {
+            intakeOn = true;
+            preRollers.move(90);
+            l2Motor.move(0);
+            l2_Piston.set_value(false);
+        }
+        else if (intakeOn == true)
+        {
+            intakeOn = false;
+            preRollers.move(0);
+            l2Motor.move(0);
+            l2_Piston.set_value(true);
+        }
+    }
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
     {
         if (intakeOn == false)
         {
@@ -80,22 +97,6 @@ void intake()
     }
 }
 
-void storageSystem()
-{
-    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
-    // {
-    //     l2Motor.move(127);
-    // }
-    // else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
-    // {
-    //     l2Motor.move(-127);
-    // }
-    // else
-    // {
-    //     l2Motor.move(0);
-    // }
-}
-
 bool lw = false;
 void littleWill()
 {
@@ -113,42 +114,15 @@ void littleWill()
         }
     }
 }
-bool hoodOn = false;
-void hood()
+
+void bunnyEar()
 {
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B))
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B))
     {
-        if (hoodOn == false)
-        {
-            hoodOn = true;
-            hood_Piston.set_value(true);
-        }
-        else if (hoodOn == true)
-        {
-            hoodOn = false;
-            hood_Piston.set_value(false);
-        }
+        bunny_Ear_Piston.set_value(false);
     }
-}
-
-void intakeScore()
-{
-}
-
-bool dp = false;
-void doublePark()
-{
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT))
+    else
     {
-        if (dp == false)
-        {
-            dp = true;
-            dp_Piston.set_value(true);
-        }
-        else if (dp == true)
-        {
-            dp = false;
-            dp_Piston.set_value(false);
-        }
+        bunny_Ear_Piston.set_value(true);
     }
 }

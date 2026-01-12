@@ -5,8 +5,12 @@
 #include "teleop.h"
 #include "constants.h"
 
-double odomResetRight();
+double odomResetFront();
 
 double odomResetLeft();
+
+double odomResetRight();
+
+double odomResetBack();
 
 void colorSorting();
