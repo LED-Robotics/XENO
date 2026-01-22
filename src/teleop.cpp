@@ -40,14 +40,14 @@ void intake()
             intakeOn = true;
             preRollers.move(90);
             l2Motor.move(0);
-            l2_Piston.set_value(false);
+            l2_Piston.set_value(true);
         }
         else if (intakeOn == true)
         {
             intakeOn = false;
             preRollers.move(0);
             l2Motor.move(0);
-            l2_Piston.set_value(true);
+            l2_Piston.set_value(false);
         }
     }
     else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))

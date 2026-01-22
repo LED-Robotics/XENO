@@ -6,8 +6,8 @@ using namespace LateralPID;
 
 // Motors
 
-MotorGroup leftMotors({-DrivePorts::kFrontLeft, DrivePorts::kBackLeft, DrivePorts::kMiddleLeft}, MotorGears::blue, MotorUnits::deg);
-MotorGroup rightMotors({DrivePorts::kFrontRight, DrivePorts::kBackRight, DrivePorts::kMiddleRight}, MotorGears::blue, MotorUnits::deg);
+MotorGroup leftMotors({DrivePorts::kFrontLeft, -DrivePorts::kBackLeft, -DrivePorts::kMiddleLeft}, MotorGears::blue, MotorUnits::deg);
+MotorGroup rightMotors({-DrivePorts::kFrontRight, -DrivePorts::kBackRight, -DrivePorts::kMiddleRight}, MotorGears::blue, MotorUnits::deg);
 
 pros::Motor preRollers(-6, MotorGears::rpm_600, MotorUnits::deg);
 pros::Motor l2Motor(7, MotorGears::rpm_600, MotorUnits::deg);
@@ -24,7 +24,7 @@ pros::ADILed led('H', 100);
 
 // Sensors
 
-pros::Distance rightDistance(20);
+pros::Distance rightDistance(19);
 pros::Distance leftDistance(12);
 pros::Distance frontDistance(11);
 pros::Distance backDistance(10);
