@@ -24,12 +24,12 @@ pros::ADILed led('H', 100);
 
 // Sensors
 
-pros::Distance rightDistance(19);
+pros::Distance rightDistance(18);
 pros::Distance leftDistance(12);
 pros::Distance frontDistance(11);
 pros::Distance backDistance(10);
 
-Imu imuTop{21};
+Imu imuTop{2};
 
 pros::Rotation vertical_Tracking(15);
 

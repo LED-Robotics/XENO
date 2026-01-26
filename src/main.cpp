@@ -34,7 +34,8 @@ void on_center_button()
 void initialize()
 {
     pros::lcd::initialize(); // initialize brain screen
-    chassis.calibrate();     // calibrate sensors
+    chassis.calibrate();
+    // calibrate sensors
     // print position to brain screen
     pros::Task screen_task([&]()
                            {
@@ -44,7 +45,7 @@ void initialize()
             pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
             // delay to save resources
-            pros::delay(20);
+            pros::delay(10);
         } });
 }
 
@@ -80,7 +81,8 @@ void competition_initialize() {}
 
 void autonomous()
 {
-    skills();
+
+    rightHalfRed();
 }
 /**
  * Runs the operator control code. This function will be started in its own task
