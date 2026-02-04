@@ -5,12 +5,12 @@
 
 namespace DrivePorts
 {
-    constexpr int kFrontLeft = -1;
-    constexpr int kFrontRight = -10;
-    constexpr int kBackLeft = -3;
-    constexpr int kBackRight = 8;
-    constexpr int kMiddleRight = -9;
-    constexpr int kMiddleLeft = 4;
+    constexpr int kFrontLeft = -8;
+    constexpr int kFrontRight = -3;
+    constexpr int kBackLeft = 9;
+    constexpr int kBackRight = -2;
+    constexpr int kMiddleRight = 1;
+    constexpr int kMiddleLeft = -10;
 
 }
 

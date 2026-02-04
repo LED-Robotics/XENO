@@ -48,6 +48,10 @@ void lcdAllianceSelect()
     // printData();
 }
 
+void standby()
+{
+}
+
 void rightHalfRed()
 {
     bunny_Ear_Piston.set_value(true);

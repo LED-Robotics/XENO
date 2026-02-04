@@ -5,6 +5,8 @@
 #include "constants.h"
 #include "autonomous_funcs.h"
 
+void standby();
+
 void rightHalfRed();
 
 void leftHalfBlue();

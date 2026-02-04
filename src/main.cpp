@@ -5,6 +5,8 @@
 #include "autonomous_funcs.h"
 #include "autonomous_routes.h"
 
+LV_IMG_DECLARE(sixSeven);
+int auton = 3;
 /**
  * A callback function for LLEMU's center button.
  *
@@ -13,16 +15,16 @@
  */
 void on_center_button()
 {
-    static bool pressed = false;
-    pressed = !pressed;
-    if (pressed)
-    {
-        pros::lcd::set_text(2, "I was pressed!");
-    }
-    else
-    {
-        pros::lcd::clear_line(2);
-    }
+    // static bool pressed = false;
+    // pressed = !pressed;
+    // if (pressed)
+    // {
+    //     pros::lcd::set_text(2, "I was pressed!");
+    // }
+    // else
+    // {
+    //     pros::lcd::clear_line(2);
+    // }
 }
 
 /**
@@ -33,20 +35,47 @@ void on_center_button()
  */
 void initialize()
 {
-    pros::lcd::initialize(); // initialize brain screen
+    lv_obj_t *img = lv_img_create(lv_scr_act()); // create image object
+    lv_img_set_src(img, &sixSeven);
+    lv_obj_align(img, NULL, LV_ALIGN_CENTER, 0);
+    lv_obj_t *autoSelector = lv_dropdown_create(lv_scr_act());
+    lv_dropdown_set_options(autoSelector, "Left Side\n"
+                                          "Right Side\n"
+                                          "Skills\n"
+                                          "Standby\n");
+    // pros::lcd::initialize(); // initialize brain screen
+    if (lv_dropdown_get_selected(autoSelector) == 0)
+    {
+        auton = 0;
+    }
+    else if (lv_dropdown_get_selected(autoSelector) == 1)
+    {
+        auton = 1;
+    }
+    else if (lv_dropdown_get_selected(autoSelector) == 2)
+    {
+        auton = 2;
+    }
+    else if (lv_dropdown_get_selected(autoSelector) == 3)
+    {
+        auton = 3;
+    }
+    lv_obj_align(autoSelector, LV_ALIGN_TOP_MID, 0, 0);
+
     chassis.calibrate();
+
     // calibrate sensors
     // print position to brain screen
-    pros::Task screen_task([&]()
-                           {
-        while (true) {
-            // print robot location to the brain screen
-            pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-            pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-            pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-            // delay to save resources
-            pros::delay(10);
-        } });
+    // pros::Task screen_task([&]()
+    //                        {
+    //     while (true) {
+    //         // print robot location to the brain screen
+    //         pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+    //         pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+    //         pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+    //         // delay to save resources
+    //         pros::delay(10);
+    //     } });
 }
 
 /**
@@ -82,7 +111,22 @@ void competition_initialize() {}
 void autonomous()
 {
 
-    rightHalfRed();
+    if (auton == 0)
+    {
+        leftHalfBlue();
+    }
+    else if (auton == 1)
+    {
+        rightHalfRed();
+    }
+    else if (auton == 2)
+    {
+        skills();
+    }
+    else if (auton == 4)
+    {
+        standby();
+    }
 }
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -107,7 +151,7 @@ void opcontrol()
         intake();
         bunnyEar();
         double heading = odomResetRight();
-        master.print(1, 0, "Angle: %f", heading);
+        // master.print(1, 0, "Angle: %f", heading);
 
         // Run for 20 ms then update
     }
