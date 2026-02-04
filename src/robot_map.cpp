@@ -6,19 +6,19 @@ using namespace LateralPID;
 
 // Motors
 
-MotorGroup leftMotors({DrivePorts::kFrontLeft, -DrivePorts::kBackLeft, -DrivePorts::kMiddleLeft}, MotorGears::blue, MotorUnits::deg);
-MotorGroup rightMotors({-DrivePorts::kFrontRight, -DrivePorts::kBackRight, -DrivePorts::kMiddleRight}, MotorGears::blue, MotorUnits::deg);
+MotorGroup leftMotors({DrivePorts::kFrontLeft, DrivePorts::kBackLeft, DrivePorts::kMiddleLeft}, MotorGears::blue, MotorUnits::deg);
+MotorGroup rightMotors({-DrivePorts::kFrontRight, DrivePorts::kBackRight, DrivePorts::kMiddleRight}, MotorGears::blue, MotorUnits::deg);
 
-pros::Motor preRollers(-6, MotorGears::rpm_600, MotorUnits::deg);
+pros::Motor preRollers(-5, MotorGears::rpm_600, MotorUnits::deg);
 pros::Motor l2Motor(7, MotorGears::rpm_600, MotorUnits::deg);
 
 pros::Controller master(CONTROLLER_MASTER);
 
 // Pistons
 
-pros::ADIDigitalOut bunny_Ear_Piston('C');
-pros::ADIDigitalOut l2_Piston('B');
-pros::ADIDigitalOut lw_Piston('A');
+pros::ADIDigitalOut bunny_Ear_Piston('G');
+pros::ADIDigitalOut l2_Piston('A');
+pros::ADIDigitalOut lw_Piston('H');
 
 pros::ADILed led('H', 100);
 
@@ -27,11 +27,11 @@ pros::ADILed led('H', 100);
 pros::Distance rightDistance(18);
 pros::Distance leftDistance(12);
 pros::Distance frontDistance(11);
-pros::Distance backDistance(10);
+pros::Distance backDistance(20);
 
-Imu imuTop{2};
+Imu imuTop{21};
 
-pros::Rotation vertical_Tracking(15);
+pros::Rotation vertical_Tracking(4);
 
 lemlib::TrackingWheel vertical_tracking_wheel(&vertical_Tracking, lemlib::Omniwheel::NEW_2, 0);
 

@@ -4,7 +4,7 @@
 
 void teleopDrive()
 {
-    double x = (double)master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X) / 127.0; // /127 to push value between -1.0 and 1.0
+    double x = -(double)master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X) / 127.0; // /127 to push value between -1.0 and 1.0
     double y = (double)master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) / 127.0;
     // zero out axes if they fall within deadzone
     if (x > -0.05 && x < 0.05)
