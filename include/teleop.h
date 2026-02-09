@@ -9,6 +9,6 @@ void teleopDrive();
 
 void littleWill();
 
-void intake();
+void intakeControl();
 
 void bunnyEar();

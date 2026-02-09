@@ -31,71 +31,63 @@ void teleopDrive()
 }
 bool intakeOn = false;
 
-void intake()
-{
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))
-    {
-        if (intakeOn == false)
-        {
-            intakeOn = true;
-            preRollers.move(90);
-            l2Motor.move(0);
-            l2_Piston.set_value(true);
-        }
-        else if (intakeOn == true)
-        {
-            intakeOn = false;
-            preRollers.move(0);
-            l2Motor.move(0);
-            l2_Piston.set_value(false);
-        }
+void intakeControl() {
+  while(true) {
+   if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
+       l2Motor.move(-127);
+       delay(60);
+     
+      if (intakeOn == false) {
+        intakeOn = true;
+        preRollers.move(90);
+        l2Motor.move(0);
+        l2_Piston.set_value(true);
+      } else if (intakeOn == true) {
+        intakeOn = false;
+        preRollers.move(0);
+        l2Motor.move(0);
+        l2_Piston.set_value(false);
+      }}
+    }    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+       l2Motor.move(-127);
+       delay(20);
+     
+      if (intakeOn == false) {
+        intakeOn = true;
+        preRollers.move(127);
+        l2Motor.move(127);
+      } else if (intakeOn == true) {
+        intakeOn = false;
+        preRollers.move(0);
+        l2Motor.move(0);
+      }
+    }   else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+      if (intakeOn == false) {
+        intakeOn = true;
+        preRollers.move(-127);
+        l2Motor.move(-127);
+      } else if (intakeOn == true) {
+        intakeOn = false;
+        preRollers.move(0);
+        l2Motor.move(0);
+      }
+    }  
+      if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
+        l2Motor.move(-127);
+        delay(60);
+        if (intakeOn == false) {
+        intakeOn = true;
+        preRollers.move(127);
+        l2Motor.move(-127);
+      } else if (intakeOn == true) {
+        intakeOn = false;
+        preRollers.move(0);
+        l2Motor.move(0);
+      }
     }
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2))
-    {
-        if (intakeOn == false)
-        {
-            intakeOn = true;
-            preRollers.move(127);
-            l2Motor.move(127);
-        }
-        else if (intakeOn == true)
-        {
-            intakeOn = false;
-            preRollers.move(0);
-            l2Motor.move(0);
-        }
-    }
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1))
-    {
-        if (intakeOn == false)
-        {
-            intakeOn = true;
-            preRollers.move(-127);
-            l2Motor.move(-127);
-        }
-        else if (intakeOn == true)
-        {
-            intakeOn = false;
-            preRollers.move(0);
-            l2Motor.move(0);
-        }
-    }
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2))
-    {
-        if (intakeOn == false)
-        {
-            intakeOn = true;
-            preRollers.move(127);
-            l2Motor.move(-127);
-        }
-        else if (intakeOn == true)
-        {
-            intakeOn = false;
-            preRollers.move(0);
-            l2Motor.move(0);
-        }
-    }
-}
+    pros::delay(20);
+  }
+
 
 bool lw = false;
 void littleWill()

@@ -76,6 +76,7 @@ void initialize()
     //         // delay to save resources
     //         pros::delay(10);
     //     } });
+    
 }
 
 /**
@@ -141,14 +142,16 @@ void autonomous()
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+void balls() {
+
+}
 void opcontrol()
 {
-
+    pros::Task intakeTask(intakeControl);
     while (true)
     {
         teleopDrive();
         littleWill();
-        intake();
         bunnyEar();
         double heading = odomResetRight();
         // master.print(1, 0, "Angle: %f", heading);
