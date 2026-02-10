@@ -34,7 +34,7 @@ bool intakeOn = false;
 void intakeControl() {
   while(true) {
    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)){
-       l2Motor.move(-127);
+       preRollers.move(-127);
        delay(60);
      
       if (intakeOn == false) {
@@ -48,8 +48,8 @@ void intakeControl() {
         l2Motor.move(0);
         l2_Piston.set_value(false);
       }}
-    }    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
-       l2Motor.move(-127);
+        if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+       preRollers.move(-127);
        delay(20);
      
       if (intakeOn == false) {
@@ -73,7 +73,7 @@ void intakeControl() {
       }
     }  
       if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
-        l2Motor.move(-127);
+        preRollers.move(-127);
         delay(60);
         if (intakeOn == false) {
         intakeOn = true;
@@ -86,7 +86,7 @@ void intakeControl() {
       }
     }
     pros::delay(20);
-  }
+  }}
 
 
 bool lw = false;
