@@ -35,48 +35,45 @@ void on_center_button()
  */
 void initialize()
 {
-    lv_obj_t *img = lv_img_create(lv_scr_act()); // create image object
-    lv_img_set_src(img, &sixSeven);
-    lv_obj_align(img, NULL, LV_ALIGN_CENTER, 0);
-    lv_obj_t *autoSelector = lv_dropdown_create(lv_scr_act());
-    lv_dropdown_set_options(autoSelector, "Left Side\n"
-                                          "Right Side\n"
-                                          "Skills\n"
-                                          "Standby\n");
-    // pros::lcd::initialize(); // initialize brain screen
-    if (lv_dropdown_get_selected(autoSelector) == 0)
-    {
-        auton = 0;
-    }
-    else if (lv_dropdown_get_selected(autoSelector) == 1)
-    {
-        auton = 1;
-    }
-    else if (lv_dropdown_get_selected(autoSelector) == 2)
-    {
-        auton = 2;
-    }
-    else if (lv_dropdown_get_selected(autoSelector) == 3)
-    {
-        auton = 3;
-    }
-    lv_obj_align(autoSelector, LV_ALIGN_TOP_MID, 0, 0);
-
+    // lv_obj_t *img = lv_img_create(lv_scr_act()); // create image object
+    // lv_img_set_src(img, &sixSeven);
+    // lv_obj_align(img, NULL, LV_ALIGN_CENTER, 0);
+    // lv_obj_t *autoSelector = lv_dropdown_create(lv_scr_act());
+    // lv_dropdown_set_options(autoSelector, "Left Side\n"
+    //                                       "Right Side\n"
+    //                                       "Skills\n"
+    //                                       "Standby\n");
+    pros::lcd::initialize(); // initialize brain screen
+    // if (lv_dropdown_get_selected(autoSelector) == 0)
+    // {
+    //     auton = 0;
+    // }
+    // else if (lv_dropdown_get_selected(autoSelector) == 1)
+    // {
+    //     auton = 1;
+    // }
+    // else if (lv_dropdown_get_selected(autoSelector) == 2)
+    // {
+    //     auton = 2;
+    // }
+    // else if (lv_dropdown_get_selected(autoSelector) == 3)
+    // {
+    //     auton = 3;
+    // }
+    // lv_obj_align(autoSelector, LV_ALIGN_TOP_MID, 0, 0);
     chassis.calibrate();
-
     // calibrate sensors
     // print position to brain screen
-    // pros::Task screen_task([&]()
-    //                        {
-    //     while (true) {
-    //         // print robot location to the brain screen
-    //         pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
-    //         pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
-    //         pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-    //         // delay to save resources
-    //         pros::delay(10);
-    //     } });
-    
+    pros::Task screen_task([&]()
+                           {
+        while (true) {
+            // print robot location to the brain screen
+            pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
+            pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
+            pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+            // delay to save resources
+            pros::delay(10);
+        } });
 }
 
 /**
@@ -111,23 +108,27 @@ void competition_initialize() {}
 
 void autonomous()
 {
-
-    if (auton == 0)
-    {
-        leftHalfBlue();
-    }
-    else if (auton == 1)
-    {
-        rightHalfRed();
-    }
-    else if (auton == 2)
-    {
-        skills();
-    }
-    else if (auton == 4)
-    {
-        standby();
-    }
+    // chassis.setPose(0, 0, 0);
+    // // chassis.moveToPoint(0, 24, 1000000);
+    // chassis.turnToHeading(90, 1000000);
+    skills();
+    // rightHalfRed();
+    // if (auton == 0)
+    // {
+    //     leftHalfBlue();
+    // }
+    // else if (auton == 1)
+    // {
+    //     rightHalfRed();
+    // }
+    // else if (auton == 2)
+    // {
+    //     skills();
+    // }
+    // else if (auton == 4)
+    // {
+    //     standby();
+    // }
 }
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -142,8 +143,8 @@ void autonomous()
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void balls() {
-
+void balls()
+{
 }
 void opcontrol()
 {

@@ -5,12 +5,12 @@
 
 namespace DrivePorts
 {
-    constexpr int kFrontLeft = -1;
-    constexpr int kFrontRight = -10;
-    constexpr int kBackLeft = 3;
-    constexpr int kBackRight = -19;
-    constexpr int kMiddleRight = -9;
-    constexpr int kMiddleLeft = 2;
+    constexpr int kFrontLeft = 10;
+    constexpr int kFrontRight = 1;
+    constexpr int kBackLeft = -19;
+    constexpr int kBackRight = 3;
+    constexpr int kMiddleRight = 2;
+    constexpr int kMiddleLeft = -9;
 
 }
 
@@ -34,13 +34,13 @@ namespace LateralPID
     constexpr double lateralSmallErrorRangeTimeout = 0.0; // milliseconds
     constexpr double lateralLargeErrorRange = 0.0;        // degrees
     constexpr double lateralLargeErrorRangeTimeout = 0.0; // milliseconds
-    constexpr double lateralSlew = 50.0;                  // maximum acceleration
+    constexpr double lateralSlew = 0.0;                   // maximum acceleration
 
 }
 
 namespace AngularPID
 {
-    constexpr double angularkP = 1.8;                     // proportional gain
+    constexpr double angularkP = 2.5;                     // proportional gain
     constexpr double angularkI = 0.0;                     // integral gain
     constexpr double angularkD = 12.25;                   // derivative gain
     constexpr double angularAntiWindup = 0.0;             // anti windup
